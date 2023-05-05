@@ -1,16 +1,41 @@
-# This is a sample Python script.
+import os
+import pandas as pd
+import paho.mqtt.client as mqtt
+import json
+import time
+import threading
+import sys
 
-# Press Umschalt+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+# Load JSON data from CSV
+csv_file = os.path.expanduser("~/Desktop/abcnews-date-text.csv")
+abcnews = pd.read_csv(csv_file, encoding="utf-8")
+json_string = abcnews.to_json(orient="records")
+json_data = json.loads(json_string)
 
+def send_messages(client):
+    for record in json_data:  # Iterate over the records in json_data
+        client.publish("your/topic", json.dumps(record))
+        print(f"Sent record: {record}")  # Print the sent record
+        time.sleep(1)  # Wait for 1 second
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Strg+F8 to toggle the breakpoint.
+def on_connect(client, userdata, flags, rc):
+    print("Connected with result code " + str(rc))
+    send_thread = threading.Thread(target=send_messages, args=(client,))
+    send_thread.start()
 
+client = mqtt.Client()
+client.on_connect = on_connect
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+client.username_pw_set("username", "password")  # If required
+client.connect("127.0.0.1", 1883, 60)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+client.loop_start()
+
+try:
+    while True:
+        time.sleep(1)
+except KeyboardInterrupt:
+    print("Interrupted by user, stopping...")
+    client.loop_stop()
+    sys.exit(0)
+
