@@ -7,9 +7,16 @@ import threading
 import sys
 
 # Load JSON data from CSV
-csv_file = os.path.expanduser("~/Desktop/abcnews-date-text.csv")
-abcnews = pd.read_csv(csv_file, encoding="utf-8")
-json_string = abcnews.to_json(orient="records")
+csv_file = os.path.expanduser("~/Desktop/articles.csv")
+articles = pd.read_csv(csv_file, encoding="utf-8")
+
+# Convert 'date' column to datetime format
+articles['date'] = pd.to_datetime(articles['date'])
+
+# Convert dates to strings before exporting to JSON
+articles['date'] = articles['date'].dt.strftime('%Y-%m-%d')
+
+json_string = articles.to_json(orient="records")
 json_data = json.loads(json_string)
 
 def send_messages(client):
