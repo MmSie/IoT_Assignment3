@@ -7,23 +7,23 @@ import threading
 import sys
 
 # Load JSON data from CSV
-csv_file = os.path.expanduser("~/Desktop/articles.csv")
-articles = pd.read_csv(csv_file, encoding="utf-8")
+brightness_csv_file = os.path.expanduser("~/Desktop/brightness_sensor_data_full_year.csv")
+brightness_data = pd.read_csv(brightness_csv_file, encoding="utf-8")
+brightness_json_string = brightness_data.to_json(orient="records")
+brightness_json_data = json.loads(brightness_json_string)
 
-# Convert 'date' column to datetime format
-articles['date'] = pd.to_datetime(articles['date'])
-
-# Convert dates to strings before exporting to JSON
-articles['date'] = articles['date'].dt.strftime('%Y-%m-%d')
-
-json_string = articles.to_json(orient="records")
-json_data = json.loads(json_string)
+temperature_csv_file = os.path.expanduser("~/Desktop/temperature_sensor_data_full_year.csv")
+temperature_data = pd.read_csv(temperature_csv_file, encoding="utf-8")
+temperature_json_string = temperature_data.to_json(orient="records")
+temperature_json_data = json.loads(temperature_json_string)
 
 def send_messages(client):
-    for record in json_data:  # Iterate over the records in json_data
-        client.publish("your/topic", json.dumps(record))
-        print(f"Sent record: {record}")  # Print the sent record
-        time.sleep(1)  # Wait for 1 second
+    for brightness_record, temperature_record in zip(brightness_json_data, temperature_json_data):
+        client.publish("storage/brightness", json.dumps(brightness_record))
+        client.publish("storage/temperature", json.dumps(temperature_record))
+        print(f"Sent brightness record: {brightness_record}")
+        print(f"Sent temperature record: {temperature_record}")
+        time.sleep(1)
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code " + str(rc))
@@ -33,8 +33,8 @@ def on_connect(client, userdata, flags, rc):
 client = mqtt.Client()
 client.on_connect = on_connect
 
-client.username_pw_set("username", "password")  # If required
-client.connect("127.0.0.1", 1883, 60)
+client.username_pw_set("ftsim", "unisg")
+client.connect("ftsim.weber.ics.unisg.ch", 1883, 60)
 
 client.loop_start()
 
@@ -45,4 +45,3 @@ except KeyboardInterrupt:
     print("Interrupted by user, stopping...")
     client.loop_stop()
     sys.exit(0)
-
