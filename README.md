@@ -26,7 +26,7 @@ The project is split into two main parts:
 
 Please note: You need to have `pandas`, `paho-mqtt`, `numpy`, `astral`, `os`, `datetime` and `json` Python libraries installed to run these scripts.
 
-#### Visualizations:
+#### Visualisations:
 
 In `main.ipynb`, we have also provided a visual representation of the daily temperature variation that we simulate. It demonstrates the temperature peaking at 14:00 and bottoming out at 02:00.
 
