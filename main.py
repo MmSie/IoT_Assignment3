@@ -22,7 +22,7 @@ def send_messages(client):
     for brightness_record, temperature_record in zip(brightness_json_data, temperature_json_data):
         client.publish("storage/brightness", json.dumps(brightness_record))
         print(f"Sent brightness record: {brightness_record}")
-        time.sleep(0.5)
+        time.sleep(1)
         client.publish("storage/temperature", json.dumps(temperature_record))
         print(f"Sent temperature record: {temperature_record}")
         time.sleep(1)
