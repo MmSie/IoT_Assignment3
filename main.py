@@ -17,21 +17,24 @@ temperature_data = pd.read_csv(temperature_csv_file, encoding="utf-8")
 temperature_json_string = temperature_data.to_json(orient="records")
 temperature_json_data = json.loads(temperature_json_string)
 
+
 # Define a function for sending records with a delay
-def send_messages(client):
+def send_messages(connector):
     for brightness_record, temperature_record in zip(brightness_json_data, temperature_json_data):
-        client.publish("storage/brightness", json.dumps(brightness_record))
+        connector.publish("storage/brightness", json.dumps(brightness_record))
         print(f"Sent brightness record: {brightness_record}")
         time.sleep(1)
-        client.publish("storage/temperature", json.dumps(temperature_record))
+        connector.publish("storage/temperature", json.dumps(temperature_record))
         print(f"Sent temperature record: {temperature_record}")
         time.sleep(1)
 
+
 # Define a function to check connection with the MQTT client and create a thread to call the send function defined above
-def on_connect(client, userdata, flags, rc):
+def on_connect(connector, rc):
     print("Connected with result code " + str(rc))
-    send_thread = threading.Thread(target=send_messages, args=(client,))
+    send_thread = threading.Thread(target=send_messages, args=connector)
     send_thread.start()
+
 
 # Create an instance of the MQTT client class
 client = mqtt.Client()
