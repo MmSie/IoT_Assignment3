@@ -35,4 +35,4 @@ The data used in the demo video is available in this repository. You can find th
 
 #### Visualisations in main.ipynb:
 
-The `main.ipynb` file also contains visualisations that describe the seasonal and daily variations temperature.
+The `main.ipynb` file also contains visualisations that describe the seasonal and daily variations of the temperature.
