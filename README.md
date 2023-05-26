@@ -25,3 +25,14 @@ The project is split into two main parts:
 2. Run `main.py` to start sending the sensor data to the MQTT broker. 
 
 Please note: You need to have `pandas`, `paho-mqtt`, `numpy`, `astral`, `os`, `datetime` and `json` Python libraries installed to run these scripts.
+
+#### Data for Demo Video:
+
+The data used in the demo video is available in this repository. You can find the following CSV files here:
+
+- `brightness_sensor_data_full_year.csv`
+- `temperature_sensor_data_full_year.csv`
+
+#### Visualisations in main.ipynb:
+
+The `main.ipynb` file also contains visualisations that describe the seasonal and daily variations temperature.
