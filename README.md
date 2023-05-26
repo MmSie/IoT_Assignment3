@@ -25,8 +25,3 @@ The project is split into two main parts:
 2. Run `main.py` to start sending the sensor data to the MQTT broker. 
 
 Please note: You need to have `pandas`, `paho-mqtt`, `numpy`, `astral`, `os`, `datetime` and `json` Python libraries installed to run these scripts.
-
-#### Visualisations:
-
-In `main.ipynb`, we have also provided a visual representation of the daily temperature variation that we simulate. It demonstrates the temperature peaking at 14:00 and bottoming out at 02:00.
-
